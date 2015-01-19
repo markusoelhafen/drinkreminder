@@ -1,0 +1,29 @@
+{
+  "name": "Drink Reminder",
+  "version": "0.1.1.1",
+  "manifest_version": 2,
+  "default_locale": "en",
+  "description": "Behold the everday struggle of drinking too little.",
+  "homepage_url": "http://markusoelhafen.at",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "scripts": [
+      "src/bg/background.js"
+    ],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_icon": "icons/icon19.png",
+    "default_title": "Drink Reminder",
+    "default_popup": "src/browser_action/browser_action.html"
+  },
+  "permissions": [
+    "notifications",
+    "storage"
+  ]
+}

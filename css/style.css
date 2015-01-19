@@ -1,0 +1,290 @@
+* {
+	padding: 0;
+	margin: 0;
+	border: none;
+	font-family: Helvetica, Arial, sans-serif;
+	font-weight: normal;
+}
+
+*:focus {
+    outline:none;
+}
+
+body {
+	background-color: #ffffff;
+	font-size: 14px;
+	line-height: 1.4em;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	-webkit-touch-callout: none;
+}
+
+#mainPopup {
+	height: 120px;
+	max-height: 120px;
+	overflow: hidden;
+	width: 360px;
+	color: #333333;
+	background-color: #ffffff;
+	position: relative;
+	display: inline-block;
+
+	/*border: 1px solid #cccccc;*/
+}
+
+.title {
+	font-size: 14px;
+	line-height: 20px;
+	font-weight: normal;
+	margin: 10px 0 5px 0;
+	text-transform: uppercase;
+}
+
+.description {
+	font-size: 12px;
+	font-weight: normal;
+}
+
+.information {
+	width: 260px;
+	display: inline-block;
+	position: relative;
+	vertical-align: top;
+}
+
+.buttons {
+	width: 360px;
+	border-top: 1px solid #eeeeee;
+	height: 40px;
+	position: relative;
+}
+
+.units {
+	position: absolute;
+	top: 12px;
+	left: 85px;
+}
+
+/*/////////////////////////////////////
+//          FLIP ANIMATION           //
+/////////////////////////////////////*/
+
+/* entire container, keeps perspective */
+.flip-container {
+	perspective: 1000;
+	/*border: 1px solid #ccc;*/
+}
+	/* flip the pane when hovered */
+	/*.flip-container:hover .flipper, */.flip-container.hover .flipper {
+		transform: rotateY(180deg);
+	}
+
+.flip-container, .front, .back {
+	width: 360px;
+	height: 120px;
+}
+
+/* flip speed goes here */
+.flipper {
+	transition: 0.6s;
+	transform-style: preserve-3d;
+
+	position: relative;
+}
+
+/* hide back of pane during swap */
+.front, .back {
+	backface-visibility: hidden;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* front pane, placed above back */
+.front {
+	z-index: 2;
+	/* for firefox 31 */
+	transform: rotateY(0deg);
+}
+
+/* back, initially hidden pane */
+.back {
+	transform: rotateY(180deg);
+}
+
+
+/*/////////////////////////////////////
+//              BUTTON               //
+/////////////////////////////////////*/
+
+.button {
+	display: block;
+	position: relative;
+	height: 40px;
+	line-height: 40px;
+	font-size: 14px;
+	cursor: pointer;
+	padding: 0 12px;
+	text-align: left;
+	width: 100%;
+}
+
+.blue {
+	/*background-color: #2196F3;*/
+	background-color: #9bd4f2;
+	color: #ffffff;
+	
+}
+
+.blue:hover {
+	/*background-color: #1E88E5;*/
+	background-color: #64bae4;
+}
+
+.grey {
+	background-color: #a6a6a6;
+	color: #ffffff;
+}
+
+.flat {
+	background-color: #ffffff;
+	color: #333333;
+}
+
+.flat:hover {
+	background-color: #f2f2f2;
+}
+
+.icon-button {
+	width: 80px;
+	height: 80px;
+	position: relative;
+	left: 0;
+	top: 0;
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.cursor {
+	cursor: pointer;
+}
+
+/*.icon-button object {
+	cursor: pointer;
+}
+
+.icon-button object svg {
+	fill: #ffffff;
+	cursor: pointer;
+}*/
+
+/*/////////////////////////////////////
+//     INPUT STYLES & ANIMATION      //
+/////////////////////////////////////*/
+
+.inputform {
+	/*margin: 20px 0;*/
+}
+
+.inputGroup {
+	margin-top: 20px;
+	width: 260px;
+	display: inline-block;
+	position: relative;
+	vertical-align: top;
+}
+
+.input {
+	font-size: 14px;
+	padding: 12px 10px 8px 5px;
+	display: block;
+	width: 60px;
+	border: none;
+	border-bottom: 1px solid #757575;
+}
+
+.input:focus {
+	outline: none;
+}
+
+.label {
+	color: #2196F3;
+	font-size: 12px;
+	font-weight: normal;
+	position: absolute;
+	pointer-events: none;
+	left: 5px;
+	top: -10px;
+	transition: 0.2s ease all;
+}
+
+.bar { 
+	position: relative;
+	display: block;
+	width: 75px;
+}
+.bar:before, .bar:after {
+	content: '';
+	height: 2px;
+	width: 0;
+	bottom: 1px;
+	position: absolute;
+	background: #2196F3;
+	transition: 0.2s ease all;
+}
+.bar:before {
+	left: 50%;
+}
+.bar:after {
+	right: 50%;
+}
+
+.input:focus ~ .bar:before, .input:focus ~ .bar:after {
+	width: 50%;
+}
+
+.highlight {
+	position:absolute;
+	height: 60%;
+	width: 100px;
+	top: 25px;
+	left: 0;
+	pointer-events:none;
+	opacity: 0.5;
+}
+
+.input:focus ~ .highlight {
+	animation: inputHighlighter 0.3s ease;
+}
+
+@keyframes inputhighlighter {
+	from { background:#2196F3; }
+	to { width: 0; background: transparent; }
+}
+
+
+/*/////////////////////////////////////
+//     INPUT STYLES & ANIMATION      //
+/////////////////////////////////////*/
+
+
+.settings {
+	position: absolute;
+	right: 10px;
+	text-align: right;
+	font-size: 0.8em;
+	z-index: 99;
+}
+
+.settings a {
+	color: #4d4d4d;
+	text-decoration: none;
+}
+
+.settings a:hover {
+	text-decoration: underline;
+}

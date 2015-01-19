@@ -1,0 +1,61 @@
+<!doctype html>
+
+<html>
+	<head>
+		<title>
+			Drinkreminder
+		</title>
+
+  		<link href="../../css/style.css" type="text/css" rel="stylesheet">
+
+  		<script type="text/javascript" src="../../js/script.js"></script>
+	</head>
+</html>
+<body>
+	<div id="mainPopup">
+		<div class="flip-container" id="flip-container">
+			<div class="flipper">
+				<div class="front">
+
+					<button class="icon-button blue cursor" id="runToggle">
+						<img src="../../icons/svg/dm_play.svg" id="playpause"/>
+      				</button>
+      				<div class="information">
+      					<h1 class="title">Drink reminder</h1>
+      					<p class="description">You will be reminded every <span id="counter">60</span> minutes.</p>
+      				</div>
+      				
+      				<div class="buttons">
+      					<button  class="button small flat" id="settings">
+							<div class="center">Open Settings</div>
+      					</button>
+      				</div>
+      				
+
+				</div>
+				<div class="back">
+					<div class="inputform">
+						<button class="icon-button grey">
+							<img src="../../icons/svg/dm_cog.svg" />
+						</button>
+						<div class="inputGroup">      
+							<input class="input" type="number" id="minutes" required>
+							<span class="highlight"></span>
+							<span class="bar"></span>
+							<label class="label">Remind me every</label>
+							<span class="units">minutes.</span>
+						</div>
+						<div class="buttons">
+							<button class="button small flat" id="saveSettings">
+								<div class="center">Save</div>
+      						</button>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</body>
+
