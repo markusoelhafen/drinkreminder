@@ -90,15 +90,6 @@ function areaClicked(notId) {
 //  HANDLE ALL NOTIFICATIONS  //
 ////////////////////////////////
 
-/*
-function changePriority() {
-	opt = {priority: 2};
-	chrome.notifications.update("popup1", opt, callback);
-	function callback(wasUpdated){
-		//console.log("popup updated: " + wasUpdated);
-	}
-}*/
-
 function checkNotification() {
 	chrome.notifications.update("popup1", {priority: 0}, function(existed){
 		if(existed) {
@@ -170,6 +161,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+////////////////////////////////
+//  LISTEN TO OMNIBOX-INPUT   //
+////////////////////////////////
+
+chrome.omnibox.onInputEntered.addListener(function(input){
+	var i = input.split(" ");
+
+	if(i[0] == "start") console.log("started via omnibox with " + i[1] + " minutes.");
+	else if(i[0] == "stop") console.log("stopped via omnibox");
+	
+});
 
 ////////////////////////////////
 //  LISTEN TO CONTENTSCRIPT   //
