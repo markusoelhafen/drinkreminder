@@ -8,7 +8,6 @@ var snooze_loop, alarm_loop, passedMinutes,
 	alarmTime;		/* calculated alarm time in ms */
 
 var minute = 60000;
-//var minute = 6000; // just for debugging purposes
 var snoozeMinutes = 5;
 
 ////////////////////////////////
@@ -17,7 +16,7 @@ var snoozeMinutes = 5;
 
 function init() {
 
-	update();
+	syncOptions();
 
 	if(alarm_loop) scriptRunning = true;
 	else scriptRunning = false;
@@ -47,8 +46,24 @@ function run() {
 	if(alarm_loop) scriptRunning = true;
 }
 
+function stop() {
+	clearNotification(); // clear notification  		
+  	
+  	try{
+  		if(snooze_loop) clearInterval(snooze_loop); //else console.log('no snooze_loop defined');
+  		if(alarm_loop) clearTimeout(alarm_loop); //else console.log('no alarm_loop defined');
+  		scriptRunning = false;
+  		console.log('timer stopped'); 
+  	}
+  	catch(err){
+  		console.log('still running?');
+  	}
+}
+
 function alarm() {
+	// timer run out -> send notification form chrome
 	createNotification();
+	// start snooze timer
 	snooze_loop = setInterval(snooze, minute*snoozeMinutes);
 }
 
@@ -68,21 +83,16 @@ function buttonClicked(notId, button) {
 		clearInterval(snooze_loop);
 		clearNotification();
 		alarm_loop = setTimeout(alarm, alarmTime);
-
-		// console.log("alarm reseted");
 	}
 	else if (button == 1) {
 		clearInterval(snooze_loop);
 		scriptRunning = false;
-		// console.log("alarm stopped!");
 	}
 }
 
 function areaClicked(notId) {
 	chrome.notifications.update("popup1", {priority: 0}, callback);
-	function callback(wasUpdated){
-		//console.log("popup closed: " + wasUpdated);
-	}
+	function callback(wasUpdated){}
 }
 
 
@@ -145,8 +155,11 @@ function clearNotification() {
 ////////////////////////////////
 
 function syncOptions() {
-	chrome.storage.sync.get({minSet: '60'}, function(obj) {
-		//console.log('sync callback: ' + obj.minSet + ' minutes set.');
+	chrome.storage.sync.get({
+		minSet: '60'
+	}, function(options) {
+		minuteSet = options.minSet;
+  		console.log('minuteSet: ' + minuteSet);
 	});
 }
 
@@ -168,8 +181,11 @@ document.addEventListener('DOMContentLoaded', function() {
 chrome.omnibox.onInputEntered.addListener(function(input){
 	var i = input.split(" ");
 
-	if(i[0] == "start") console.log("started via omnibox with " + i[1] + " minutes.");
-	else if(i[0] == "stop") console.log("stopped via omnibox");
+	if(i[0] == "start") {
+		// if(i[1]) minuteSet = i[1];
+		run(); /*console.log("started via omnibox with " + i[1] + " minutes.");*/
+	}
+	else if(i[0] == "stop") stop();
 	
 });
 
@@ -186,12 +202,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   	}
   	else if (request.stop == true) { // stopbutton has been clicked -> stop to run.
 
-		clearNotification(); // clear notification
-  		
-  		if(snooze_loop) clearInterval(snooze_loop); //else console.log('no snooze_loop defined');
-  		if(alarm_loop) clearTimeout(alarm_loop); //else console.log('no alarm_loop defined');
-		
-		scriptRunning = false;
+		stop();
   		sendResponse({running: false}); // send response to content script
   	}
 
