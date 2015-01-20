@@ -6,8 +6,8 @@ var running;
 ////////////////////////////////
 
 function init() {
-	sendBackgroundQuery('running');
-	read_options();
+	sendBackgroundQuery('running'); // ask if timer is running
+	read_options(); // read settings from local storage
 }
 
 ////////////////////////////////
@@ -18,27 +18,8 @@ function sendBackgroundQuery(q) {
 	chrome.runtime.sendMessage({query: q}, function(response) {
 		running = response.answer;
 		if(running == true) document.getElementById('playpause').src = '../../icons/svg/dm_pause.svg';
-		
 	});
 }
-
-function runReminder() {
-	chrome.runtime.sendMessage({run: true}, function(response) {
-		running = response.running; // tell background script to start timer
-	});
-}
-
-function stopReminder() {
-	chrome.runtime.sendMessage({stop: true}, function(response) {
-		running = response.running; // tell background script to stop timer
-	});
-}
-
-/*function sendBackgroundMinutes(m) {
-	chrome.runtime.sendMessage({minutes: m}, function(response) {
-		sent = response.answer; // tell background script set minutes
-	})
-}*/
 
 ////////////////////////////////
 //         SETTINGS           //
@@ -90,13 +71,15 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.getElementById('runToggle').addEventListener('click', function() {
 
 		if(running == false) {
-			runReminder();
-			running = true;
+			chrome.runtime.sendMessage({run: true}, function(response) {
+				running = response.running; // tell background script to start timer
+			});
 			document.getElementById('playpause').src = '../../icons/svg/dm_pause.svg';
 		}
 		else if (running == true) {
-			stopReminder();
-			running = false;
+			chrome.runtime.sendMessage({stop: true}, function(response) {
+				running = response.running; // tell background script to stop timer
+			});
 			document.getElementById('playpause').src = '../../icons/svg/dm_play.svg';
 		}
 	});

@@ -28,14 +28,9 @@ function update() {
 	syncOptions();
 
 	alarmTime = minuteSet * minute;
-	if(minuteSet) {
-		console.log('============================')
-		console.log('alarm every: ' + minuteSet + ' minutes.');
-		console.log('starting ...');
-	}
-	else {
-		console.log('nothing set yet.');
-	}
+
+	if(minuteSet) console.log('============================' + '\n' + ' starting ...');
+	else console.log('nothing set yet.');
 	
 }
 
@@ -68,7 +63,6 @@ function alarm() {
 }
 
 function snooze() {
-	// console.log("snooze started");
 	passedMinutes += snoozeMinutes;
 	checkNotification();
 }
@@ -77,16 +71,16 @@ function snooze() {
 //       HANDLE CLICKS        //
 ////////////////////////////////
 
-function buttonClicked(notId, button) {
-	// buttonIndex: 0 = ok || 1 = shut up
+function buttonClicked(notId, button) { // buttonIndex: 0 = ok || 1 = shut up
 	if (button == 0) {
 		clearInterval(snooze_loop);
 		clearNotification();
 		alarm_loop = setTimeout(alarm, alarmTime);
 	}
 	else if (button == 1) {
-		clearInterval(snooze_loop);
-		scriptRunning = false;
+		stop();
+		/*clearInterval(snooze_loop);
+		scriptRunning = false;*/
 	}
 }
 
@@ -181,10 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
 chrome.omnibox.onInputEntered.addListener(function(input){
 	var i = input.split(" ");
 
-	if(i[0] == "start") {
-		// if(i[1]) minuteSet = i[1];
-		run(); /*console.log("started via omnibox with " + i[1] + " minutes.");*/
-	}
+	if(i[0] == "start") run(); // if(i[1]) minuteSet = i[1]; 
 	else if(i[0] == "stop") stop();
 	
 });
@@ -195,13 +186,12 @@ chrome.omnibox.onInputEntered.addListener(function(input){
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.run == true) { // playbutton has been clicked -> start background script
-    	clearNotification(); // if there is a notification, clear it
+    	clearNotification(); // if there is any notification active, clear it
 
     	run(); // start background script
       	sendResponse({running: true}); // send response to content script
   	}
   	else if (request.stop == true) { // stopbutton has been clicked -> stop to run.
-
 		stop();
   		sendResponse({running: false}); // send response to content script
   	}
@@ -219,6 +209,3 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   		console.log('received minutes: ' + minuteSet);
   	}
 });
-
-
-
