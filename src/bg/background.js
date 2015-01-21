@@ -56,10 +56,8 @@ function stop() {
 }
 
 function alarm() {
-	// timer run out -> send notification form chrome
-	createNotification();
-	// start snooze timer
-	snooze_loop = setInterval(snooze, minute*snoozeMinutes);
+	createNotification(); // timer run out -> send notification form chrome
+	snooze_loop = setInterval(snooze, minute*snoozeMinutes); // start snooze timer
 }
 
 function snooze() {
@@ -85,8 +83,7 @@ function buttonClicked(notId, button) { // buttonIndex: 0 = ok || 1 = shut up
 }
 
 function areaClicked(notId) {
-	chrome.notifications.update("popup1", {priority: 0}, callback);
-	function callback(wasUpdated){}
+	chrome.notifications.update("popup1", {priority: 0}, function cb(areaClicked){} );
 }
 
 
@@ -119,29 +116,19 @@ function createNotification() {
 			title: "Shut up!"
 		}]
 	};
-	chrome.notifications.create("popup1", opt, callback);
-
-	function callback(notID) {
-		//console.log("notification " + notID + " created");
-	}
+	//chrome.notifications.create("popup1", opt, callback);
+	chrome.notifications.create("popup1", opt, function cb(notID){} );
 }
 
 function updateNotification() {
 	var msg = "You should have taken a drink " + passedMinutes + " minutes ago.";
 	var opt = {message: msg};
 
-	chrome.notifications.update("popup1", opt, callback);
-
-	function callback(wasUpdated){
-		//console.log("popup updated: " + wasUpdated);
-	}
+	chrome.notifications.update("popup1", opt, function cb(wasUpdated){} );
 }
 
 function clearNotification() {
-	chrome.notifications.clear("popup1", callback);
-	function callback(deleted){
-		//console.log("popup cleared: " + deleted);
-	}
+	chrome.notifications.clear("popup1", function cb(deleted){} );
 }
 
 ////////////////////////////////
