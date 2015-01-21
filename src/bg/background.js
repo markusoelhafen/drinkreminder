@@ -1,44 +1,24 @@
-////////////////////////////////
-//    SET GLOBAL VARIABLES    //
-////////////////////////////////
-
-var snooze_loop, alarm_loop, passedMinutes, 
+var snooze_loop, alarm_loop, //passedMinutes, 
 	scriptRunning, 	/* to sync running status with content script */
 	minuteSet,		/* minutes for each alarm set in options */
 	alarmTime;		/* calculated alarm time in ms */
 
-var minute = 60000;
-var snoozeMinutes = 5;
+var minute = 60000; /* define lenght of one minute */
+var snoozeMinutes = 5; /* length of snooze in minutes */
+var passedMinutes = 0;
 
 ////////////////////////////////
 //       RUN THAT SHIT        //
 ////////////////////////////////
 
-function init() {
-
-	syncOptions();
-
-	if(alarm_loop) scriptRunning = true;
-	else scriptRunning = false;
-
-	passedMinutes = 0;
-}
-
-function update() {
-	syncOptions();
-
+function run() {
 	alarmTime = minuteSet * minute;
 
-	if(minuteSet) console.log('============================' + '\n' + ' starting ...');
-	else console.log('nothing set yet.');
-	
-}
-
-function run() {
-	update();
-
 	alarm_loop = setTimeout(alarm, alarmTime);
-	if(alarm_loop) scriptRunning = true;
+	if(alarm_loop) {
+		scriptRunning = true;
+		console.log('============================' + '\n' + ' starting ...');
+	}
 }
 
 function stop() {
@@ -51,7 +31,7 @@ function stop() {
   		console.log('timer stopped'); 
   	}
   	catch(err){
-  		console.log('still running?');
+  		console.log('still running?' + '\n' + 'errormsg: ' + err);
   	}
 }
 
@@ -77,15 +57,8 @@ function buttonClicked(notId, button) { // buttonIndex: 0 = ok || 1 = shut up
 	}
 	else if (button == 1) {
 		stop();
-		/*clearInterval(snooze_loop);
-		scriptRunning = false;*/
 	}
 }
-
-function areaClicked(notId) {
-	chrome.notifications.update("popup1", {priority: 0}, function cb(areaClicked){} );
-}
-
 
 ////////////////////////////////
 //  HANDLE ALL NOTIFICATIONS  //
@@ -116,14 +89,12 @@ function createNotification() {
 			title: "Shut up!"
 		}]
 	};
-	//chrome.notifications.create("popup1", opt, callback);
 	chrome.notifications.create("popup1", opt, function cb(notID){} );
 }
 
 function updateNotification() {
 	var msg = "You should have taken a drink " + passedMinutes + " minutes ago.";
 	var opt = {message: msg};
-
 	chrome.notifications.update("popup1", opt, function cb(wasUpdated){} );
 }
 
@@ -143,17 +114,6 @@ function syncOptions() {
   		console.log('minuteSet: ' + minuteSet);
 	});
 }
-
-////////////////////////////////
-//     LAUNCH ON STARTUP      //
-////////////////////////////////
-
-document.addEventListener('DOMContentLoaded', function() {
-	init();
-	chrome.notifications.onClicked.addListener(areaClicked);
-	chrome.notifications.onButtonClicked.addListener(buttonClicked);
-});
-
 
 ////////////////////////////////
 //  LISTEN TO OMNIBOX-INPUT   //
@@ -192,7 +152,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   	// RECEIVE MINUTES SET IN OPTIONS
   	else if (request.minutes) {
   		sendResponse({answer: scriptRunning});
-  		minuteSet = request.minutes;
-  		console.log('received minutes: ' + minuteSet);
+  		syncOptions();
   	}
 });
+
+////////////////////////////////
+//     LAUNCH ON STARTUP      //
+////////////////////////////////
+
+onload = function() {
+	syncOptions();
+	if(alarm_loop) scriptRunning = true;
+	else scriptRunning = false;
+
+	chrome.notifications.onButtonClicked.addListener(buttonClicked);
+}

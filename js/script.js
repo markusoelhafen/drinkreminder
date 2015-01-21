@@ -1,17 +1,7 @@
 var running;
 
-
 ////////////////////////////////
-//        INITIALIZE          //
-////////////////////////////////
-
-function init() {
-	sendBackgroundQuery('running'); // ask if timer is running
-	read_options(); // read settings from local storage
-}
-
-////////////////////////////////
-// COMMUNICATE W. BACKGROUND  //
+// COMMUNICATE W/ BACKGROUND  //
 ////////////////////////////////
 
 function sendBackgroundQuery(q) {
@@ -31,28 +21,27 @@ function save_options() {
 	chrome.storage.sync.set({
 		minSet: min
 	}, function() {
-		chrome.runtime.sendMessage({minutes: min}, function(response) {
-			sent = response.answer; // tell background script set minutes
-		})
+		chrome.runtime.sendMessage({minutes: min}, function(response) { /*sent = response.answer;*/ }) // tell background script set minutes
 	})
 }
 
 function read_options() {
-  chrome.storage.sync.get({
-    minSet: '60'
-  }, function(options) {
-    document.getElementById('minutes').value = options.minSet;
-    document.getElementById('counter').innerHTML = options.minSet;
-  });
+	chrome.storage.sync.get({
+		minSet: '60'
+	}, function(options) {
+		document.getElementById('minutes').value = options.minSet;
+		document.getElementById('counter').innerHTML = options.minSet;
+	});
 }
 
 ////////////////////////////////
 //     LAUNCH ON STARTUP      //
 ////////////////////////////////
 
-document.addEventListener('DOMContentLoaded', function() {
+onload = function() {
 
-	init();
+	sendBackgroundQuery('running'); // ask if timer is running
+	read_options(); // read settings from local storage
 
 	var flipper = document.getElementById("flip-container");
 
@@ -62,14 +51,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	document.getElementById('saveSettings').addEventListener('click', function() {
 		save_options(); // save settings to local storage
-		
 		flipper.className = flipper.className.replace(" hover", "");
-		
 		read_options(); // restore options set to display changed time on popup
 	});
 
 	document.getElementById('runToggle').addEventListener('click', function() {
-
 		if(running == false) {
 			chrome.runtime.sendMessage({run: true}, function(response) {
 				running = response.running; // tell background script to start timer
@@ -83,4 +69,4 @@ document.addEventListener('DOMContentLoaded', function() {
 			document.getElementById('playpause').src = '../../icons/svg/dm_play.svg';
 		}
 	});
-});
+}
