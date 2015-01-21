@@ -142,15 +142,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		stop();
   		sendResponse({running: false}); // send response to content script
   	}
-
-  	// TELL CONTENTSCRIPT IF COUNTER IS CURRENTLY ACTIVE
-  	else if (request.query == 'running') {
+  	else if (request.query == 'running') { // TELL CONTENTSCRIPT IF COUNTER IS CURRENTLY ACTIVE
   		sendResponse({answer: scriptRunning});
   		//console.log('received query: ' + request.query);
   	}
-
-  	// RECEIVE MINUTES SET IN OPTIONS
-  	else if (request.minutes) {
+  	else if (request.minutes) { // RECEIVE MINUTES SET IN OPTIONS
   		sendResponse({answer: scriptRunning});
   		syncOptions();
   	}
